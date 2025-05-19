@@ -9,8 +9,17 @@
     <div class="bird-grid">
         {% for ave in aves %}
             <div class="bird-card">
+                {% if session.get('logged_in') %}
+                <form action="{{ url_for('delete_ave', ave_id=ave.id) }}" method="POST" class="delete-form">
+                    <button type="submit" class="delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta ave?')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+                {% endif %}
                 <h3>{{ ave.nome }}</h3>
+                {% if ave.imagem %}
                 <img src="{{ ave.imagem }}" alt="{{ ave.nome }}" class="bird-image">
+                {% endif %}
                 <p></p>
                 <h6><strong>Descrição da espécie:</strong></h6>
                 <p class="bird-description">{{ ave.descricao }}</p>
@@ -20,12 +29,8 @@
                 <p class="bird-conservacao">{{ ave.conservacao }}</p>
                 <h6><strong>Meses com possbilidade de avistar a espécie:</strong></h6>
                 <p class="bird-ocorrencia">{{ ave.ocorrencia }}</p>
-
             </div>
         {% endfor %}
     </div>
     <p>Fonte das informações: WikiAves. Disponível em: <a href="https://www.wikiaves.com.br/">https://www.wikiaves.com.br/</a>. Acesso em: 6 abr. 2025.</p>
-
 {% endblock %}
-
-

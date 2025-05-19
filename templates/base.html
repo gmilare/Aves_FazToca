@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
     <style>
         :root {
@@ -13,33 +16,72 @@
             --toca-dark: #333;
         }
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Source Sans Pro', sans-serif;
             margin: 0;
-            background-color: #f5f5f5;
+            background-color: #fff;
+            color: #222;
+            font-size: 16px;
         }
         nav {
-            background:#FFFFFF;
-            padding: 1rem;
+            background: #FFFFFF;
+            padding: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            min-height: 160px;
+        }
+        .nav-logo, .nav-logo-placeholder {
+            height: 128px;
+            width: 128px;
+            margin: 16px 24px 16px 16px;
+            flex-shrink: 0;
+        }
+        .nav-logo-placeholder {
+            visibility: hidden;
+        }
+        .nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
-            justify-content: center;
             gap: 2rem;
         }
         nav a {
-            color:#333;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: #9e9e9e;
             text-decoration: none;
-            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: #222;
         }
         .header {
             text-align: center;
-            padding: 40px 20px;
-            background: #f5f5f5;
-            color: #333;
+            padding: 40px 20px 10px 20px;
+            background: #fff;
+            color: #111;
+        }
+        .header h1 {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 4vw;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111;
+            letter-spacing: normal;
+            text-align: center;
         }
         .bird-grid {
             display: grid;
@@ -57,18 +99,23 @@
             transition: transform 0.2s;
             border: 2px solid var(--toca-green);
             cursor: pointer;
+            position: relative;
         }
         .bird-card:hover {
             transform: translateY(-5px);
         }
         .bird-card h3 {
+            font-family: 'Source Sans Pro', sans-serif;
             color: var(--toca-green);
             margin: 10px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
         }
-        .bird-description {
-            color: var(--toca-dark);
-            font-size: 0.9em;
-            margin-top: 10px;
+        .bird-description, .bird-dimorfismo, .bird-conservacao, .bird-ocorrencia {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #222;
+            font-size: 16px;
+            font-weight: 400;
         }
         .bird-image {
             width: 100%;
@@ -77,7 +124,7 @@
             margin-top: 10px;
         }
         .form-group {
-        margin-bottom: 20px;
+            margin-bottom: 20px;
         }
         .btn-primary {
             background-color: var(--toca-green);
@@ -87,23 +134,65 @@
             background-color: var(--toca-blue);
             border-color: var(--toca-blue);
         }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .delete-btn:hover {
+            color: #c82333;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Aves</a></li>
-            <li><a href="{{ url_for('create') }}">Adicionar Nova Ave</a></li>  <!-- Link para a página de criação -->
-             
-        </ul>
+        <div class="nav-bar">
+            <img src="static/logo.png" alt="Logo" class="nav-logo">
+            <div class="nav-center">
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Aves</a></li>
+                    <li><a href="{{ url_for('create') }}">Adicionar Nova Ave</a></li>
+                    {% if session.get('logged_in') %}
+                    <li><a href="{{ url_for('logout') }}">Sair</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="nav-logo-placeholder"></div>
+        </div>
     </nav>
 
     <div class="container">
-        {% block content %} {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
