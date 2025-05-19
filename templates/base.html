@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>{% block title %}{% endblock %}</title>
     <style>
         :root {
@@ -57,6 +58,7 @@
             transition: transform 0.2s;
             border: 2px solid var(--toca-green);
             cursor: pointer;
+            position: relative;
         }
         .bird-card:hover {
             transform: translateY(-5px);
@@ -77,7 +79,7 @@
             margin-top: 10px;
         }
         .form-group {
-        margin-bottom: 20px;
+            margin-bottom: 20px;
         }
         .btn-primary {
             background-color: var(--toca-green);
@@ -87,23 +89,59 @@
             background-color: var(--toca-blue);
             border-color: var(--toca-blue);
         }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            transition: color 0.3s ease;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .delete-btn:hover {
+            color: #c82333;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
     <nav>
         <ul>
             <li><a href="{{ url_for('index') }}">Aves</a></li>
-            <li><a href="{{ url_for('create') }}">Adicionar Nova Ave</a></li>  <!-- Link para a página de criação -->
-             
+            <li><a href="{{ url_for('create') }}">Adicionar Nova Ave</a></li>
+            {% if session.get('logged_in') %}
+            <li><a href="{{ url_for('logout') }}">Sair</a></li>
+            {% endif %}
         </ul>
     </nav>
 
     <div class="container">
-        {% block content %} {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
