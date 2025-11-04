@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Jogo da Memória{% endblock %}
+
+{% block content %}
+<h1 class="header">Jogo da Memória - Aves</h1>
+
+<div id="victory-message" style="display:none; text-align:center; margin-top:20px;">
+    <h2>Parabéns! Você venceu! </h2>
+    <button onclick="location.reload()" class="btn btn-success">Jogar Novamente</button>
+</div>
+<div></div>
+<div id="grid"></div>
+
+
+
+<script>
+    const grid = document.getElementById('grid');
+
+    // Recebe lista de imagens do Flask
+    const imagens = {{ imagens|tojson }};
+
+    // Pega apenas os primeiros 8 pares (16 cartas)
+    let cardsArray = imagens.slice(0, 8);
+    cardsArray = cardsArray.concat(cardsArray); // duplicar para pares
+
+    // Embaralhar
+    cardsArray.sort(() => 0.5 - Math.random());
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let matchedPairs = 0;
+    const totalPairs = 8;
+
+    function createCard(src) {
+        const card = document.createElement('div');
+        card.classList.add('bird-card');
+
+        const img = document.createElement('img');
+        img.src = '/' + src;
+        img.classList.add('bird-image');
+        img.style.visibility = 'hidden';
+
+        card.appendChild(img);
+
+        card.addEventListener('click', () => {
+            if (lockBoard || card === firstCard) return;
+
+            img.style.visibility = 'visible';
+            card.style.transform = 'scale(1.05)';
+
+            if (!firstCard) {
+                firstCard = card;
+            } else {
+                secondCard = card;
+                lockBoard = true;
+
+                if (firstCard.querySelector('img').src === secondCard.querySelector('img').src) {
+                    firstCard = null;
+                    secondCard = null;
+                    lockBoard = false;
+
+                    matchedPairs++;
+                    if (matchedPairs === totalPairs) {
+                        document.getElementById('victory-message').style.display = 'block';
+                    }
+                } else {
+                    setTimeout(() => {
+                        firstCard.querySelector('img').style.visibility = 'hidden';
+                        firstCard.style.transform = 'scale(1)';
+                        secondCard.querySelector('img').style.visibility = 'hidden';
+                        secondCard.style.transform = 'scale(1)';
+                        firstCard = null;
+                        secondCard = null;
+                        lockBoard = false;
+                    }, 1000);
+                }
+            }
+        });
+
+        grid.appendChild(card);
+    }
+
+    // Criar grid
+    cardsArray.forEach(src => createCard(src));
+</script>
+
+<style>
+#grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+}
+.bird-card {
+    background: #f0f0f0;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+}
+.bird-card img {
+    width: 100%;
+    border-radius: 8px;
+}
+#victory-message {
+    padding: 20px;
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+    border-radius: 8px;
+    font-size: 1.5rem;
+}
+</style>
+{% endblock %}

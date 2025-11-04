@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import abort
 from functools import wraps
+import random
+from flask import jsonify
 
 
 # Definir o caminho do banco de dados
@@ -123,6 +125,7 @@ def ave(ave_id):
     return render_template("aves.html", ave=ave)
 
 
+
 @app.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
@@ -170,7 +173,11 @@ def delete_ave(ave_id):
     db.session.commit()
     return redirect(url_for("index"))
 
-
+@app.route("/memory")
+def memory():
+    aves = Aves.query.limit(8).all()  # pega 8 aves para o jogo
+    imagens = [ave.imagem for ave in aves]
+    return render_template("memory.html", imagens=imagens)
 # Função para recriar as tabelas (deleta e recria as tabelas)
 @app.before_request
 def create_tables():
